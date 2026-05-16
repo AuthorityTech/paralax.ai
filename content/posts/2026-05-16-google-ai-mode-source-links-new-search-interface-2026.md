@@ -7,7 +7,7 @@ tags: ["ai-search", "google", "ai-mode"]
 primaryQuery: "Google AI Mode inline links source previews original content"
 researchBriefPath: "editorial/data/research-briefs/2026/05/16/paralax/google-ai-mode-source-links-new-search-interface-2026.json"
 researchQualityScore: 5
-featured_image: "https://paralax.ai/og/paralax/google-ai-mode-source-links-new-search-interface-2026?concept=beacon"
+featured_image: "https://paralax.ai/images/google-ai-mode-source-links-new-search-interface-2026.png"
 featured_image_alt: "Google AI Mode Is Turning Source Links Into the New Search Interface"
 visual_concept: beacon
 ---
