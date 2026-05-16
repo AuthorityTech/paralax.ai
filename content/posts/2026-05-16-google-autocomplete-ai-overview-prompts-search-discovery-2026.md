@@ -7,9 +7,8 @@ tags: ["ai-search", "google", "ai-overviews"]
 primaryQuery: "Google Autocomplete AI Overview icon"
 researchBriefPath: "editorial/data/research-briefs/2026/05/16/paralax/google-autocomplete-ai-overview-prompts-search-discovery-2026.json"
 researchQualityScore: 6.6
-featured_image: "https://paralax.ai/og/paralax/google-autocomplete-ai-overview-prompts-search-discovery-2026?concept=beacon"
+featured_image: "https://paralax.ai/images/google-autocomplete-ai-overview-prompts-search-discovery-2026.png"
 featured_image_alt: "Google Is Testing AI Overview Prompts Inside Search Autocomplete"
-visual_concept: beacon
 ---
 
 Google appears to be testing a small interface change with large search implications: AI Overview entry points inside autocomplete suggestions. If the test ships, query suggestions become answer prompts before the results page fully loads.
@@ -89,4 +88,3 @@ No. Organic search still matters, but AI visibility now includes prompt shaping,
 ### What should brands do first?
 
 Brands should audit whether their best pages are extractable by AI systems: direct answers, clear entities, specific evidence, and source-backed claims. A practical starting point is a neutral [AI visibility audit](https://app.authoritytech.io/visibility-audit) that checks how a brand appears across answer surfaces.
-
