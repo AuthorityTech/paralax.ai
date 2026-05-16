@@ -21,4 +21,4 @@ This is a Next.js 15 publication site deployed on Vercel with ISR hybrid. No dat
 
 - Pre-existing ESLint warnings (`<img>` vs `<Image />`, `<a>` vs `<Link />`) are downgraded to warnings and do not block the build.
 - Blog content lives in `content/posts/` as markdown files with `YYYY-MM-DD-{slug}.md` naming.
-- OG images are generated at build time via `satori` + `@resvg/resvg-js` + `sharp`.
+- Blog post social images are generated dynamically by `src/app/blog/[slug]/opengraph-image.tsx`; do not add per-post generated PNGs or `featured_image` frontmatter.
