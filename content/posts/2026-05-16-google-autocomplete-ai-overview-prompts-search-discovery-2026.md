@@ -7,7 +7,7 @@ tags: ["ai-search", "google", "ai-overviews"]
 primaryQuery: "Google Autocomplete AI Overview icon"
 researchBriefPath: "editorial/data/research-briefs/2026/05/16/paralax/google-autocomplete-ai-overview-prompts-search-discovery-2026.json"
 researchQualityScore: 6.6
-featured_image: "https://paralax.ai/images/google-autocomplete-ai-overview-prompts-search-discovery-2026.png"
+featured_image: "https://paralax.ai/images/google-autocomplete-ai-overview-prompts-search-discovery-2026-v2.png"
 featured_image_alt: "Google Is Testing AI Overview Prompts Inside Search Autocomplete"
 ---
 
