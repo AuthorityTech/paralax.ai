@@ -2,6 +2,17 @@ import { SITE_URL } from "@/lib/site";
 
 export const POST_SHARE_IMAGE_WIDTH = 1200;
 export const POST_SHARE_IMAGE_HEIGHT = 630;
+export const POST_SHARE_COLORS = {
+  background: "#eef8f7",
+  accent: "#0d9488",
+  accentSoft: "rgba(13,148,136,0.14)",
+  accentFaint: "rgba(13,148,136,0.08)",
+  line: "#cfe2df",
+  lineSoft: "#dcebea",
+  tick: "#9fb9b5",
+  text: "#171717",
+  muted: "#5f7472",
+};
 
 export function getPostShareImageUrl(slug: string) {
   return `${SITE_URL}/blog/${slug}/opengraph-image`;

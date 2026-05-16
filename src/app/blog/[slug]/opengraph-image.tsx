@@ -4,6 +4,7 @@ import { getPost } from "@/lib/posts";
 import {
   formatPostShareDate,
   formatPostShareMainTags,
+  POST_SHARE_COLORS,
   POST_SHARE_IMAGE_HEIGHT,
   POST_SHARE_IMAGE_WIDTH,
 } from "@/lib/postShare";
@@ -38,8 +39,8 @@ export default async function Image({ params }: Props) {
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
-          background: "#f4eee8",
-          color: "#171717",
+          background: POST_SHARE_COLORS.background,
+          color: POST_SHARE_COLORS.text,
         }}
       >
         <div
@@ -47,11 +48,11 @@ export default async function Image({ params }: Props) {
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(circle at 18% 18%, rgba(223,94,24,0.13), transparent 28%), radial-gradient(circle at 80% 78%, rgba(223,94,24,0.08), transparent 34%)",
+              `radial-gradient(circle at 18% 18%, ${POST_SHARE_COLORS.accentSoft}, transparent 28%), radial-gradient(circle at 80% 78%, ${POST_SHARE_COLORS.accentFaint}, transparent 34%)`,
           }}
         />
-        <div style={{ position: "absolute", left: 84, right: 84, top: 82, height: 1, background: "#d8d0c8" }} />
-        <div style={{ position: "absolute", left: 84, right: 84, bottom: 102, height: 1, background: "#d8d0c8" }} />
+        <div style={{ position: "absolute", left: 84, right: 84, top: 82, height: 1, background: POST_SHARE_COLORS.line }} />
+        <div style={{ position: "absolute", left: 84, right: 84, bottom: 102, height: 1, background: POST_SHARE_COLORS.line }} />
         <div
           style={{
             position: "absolute",
@@ -59,7 +60,7 @@ export default async function Image({ params }: Props) {
             top: -126,
             width: 504,
             height: 390,
-            border: "1px solid #d8d0c8",
+            border: `1px solid ${POST_SHARE_COLORS.line}`,
             borderRadius: 999,
           }}
         />
@@ -70,7 +71,7 @@ export default async function Image({ params }: Props) {
             bottom: -176,
             width: 456,
             height: 366,
-            border: "1px solid #e2d7cf",
+            border: `1px solid ${POST_SHARE_COLORS.lineSoft}`,
             borderRadius: 999,
           }}
         />
@@ -81,7 +82,7 @@ export default async function Image({ params }: Props) {
               style={{
                 width: 1,
                 height: idx === 17 ? 10 : 8,
-                background: idx === 17 ? "#df5e18" : "#bbb3ac",
+                background: idx === 17 ? POST_SHARE_COLORS.accent : POST_SHARE_COLORS.tick,
                 opacity: idx === 17 ? 1 : 0.45,
               }}
             />
@@ -103,7 +104,7 @@ export default async function Image({ params }: Props) {
         >
           <div
             style={{
-              color: "#8c8580",
+              color: POST_SHARE_COLORS.muted,
               fontFamily: "Menlo, Consolas, monospace",
               fontSize: 12,
               letterSpacing: "3.2px",
@@ -112,7 +113,7 @@ export default async function Image({ params }: Props) {
           >
             Paralax Intel
           </div>
-          <div style={{ width: 40, height: 2, marginTop: 22, background: "#df5e18" }} />
+          <div style={{ width: 40, height: 2, marginTop: 22, background: POST_SHARE_COLORS.accent }} />
           <div
             style={{
               marginTop: 24,
@@ -129,7 +130,7 @@ export default async function Image({ params }: Props) {
             style={{
               display: "flex",
               marginTop: 24,
-              color: "#8c8580",
+              color: POST_SHARE_COLORS.muted,
               fontFamily: "Menlo, Consolas, monospace",
               fontSize: 13,
               letterSpacing: "1.5px",
