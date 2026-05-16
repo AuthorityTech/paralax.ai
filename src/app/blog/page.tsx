@@ -1,6 +1,7 @@
 import { getAllPosts } from "@/lib/posts";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { SITE_SOCIAL_IMAGE } from "@/lib/socialShare";
 const BASE = "https://paralax.ai";
 
 export const metadata: Metadata = {
@@ -12,6 +13,13 @@ export const metadata: Metadata = {
     title: "Intel — Paralax",
     description: "AI search intelligence — daily analysis of how AI engines are changing discovery.",
     url: `${BASE}/blog`,
+    images: [SITE_SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Intel — Paralax",
+    description: "AI search intelligence — daily analysis of how AI engines are changing discovery.",
+    images: [{ url: SITE_SOCIAL_IMAGE.url, alt: SITE_SOCIAL_IMAGE.alt }],
   },
 };
 

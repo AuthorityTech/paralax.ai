@@ -5,6 +5,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { SITE_URL, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import { SITE_SOCIAL_IMAGE } from "@/lib/socialShare";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -49,12 +50,14 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description:
       "Daily intelligence on AI search engines, discovery shifts, and how machines are reshaping how information is found.",
+    images: [SITE_SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description:
       "Daily intelligence on AI search engines, discovery shifts, and how machines are reshaping how information is found.",
+    images: [{ url: SITE_SOCIAL_IMAGE.url, alt: SITE_SOCIAL_IMAGE.alt }],
   },
   icons: {
     icon: ["/favicon.svg"],
