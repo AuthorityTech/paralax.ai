@@ -1,0 +1,282 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Nothing design tokens — system, or forced via html.light / html.dark (see ThemeNavButton) */
+:root {
+  color-scheme: light;
+  --page-bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-raised: #f1f5f9;
+  --border: #e2e8f0;
+  --border-visible: #cbd5e1;
+  --text-display: #0f172a;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-disabled: #94a3b8;
+  --interactive: #0d9488;
+  --accent: #0d9488;
+  --dot-grid-mix: 18%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    --page-bg: #0a0a0a;
+    --surface: #111318;
+    --surface-raised: #1a1d24;
+    --border: #1e2330;
+    --border-visible: #2d3548;
+    --text-disabled: #4b5563;
+    --text-secondary: #94a3b8;
+    --text-primary: #e2e8f0;
+    --text-display: #f1f5f9;
+    --interactive: #2dd4bf;
+    --accent: #2dd4bf;
+    --dot-grid-mix: 30%;
+  }
+}
+
+html.dark {
+  color-scheme: dark;
+  --page-bg: #0a0a0a;
+  --surface: #111318;
+  --surface-raised: #1a1d24;
+  --border: #1e2330;
+  --border-visible: #2d3548;
+  --text-disabled: #4b5563;
+  --text-secondary: #94a3b8;
+  --text-primary: #e2e8f0;
+  --text-display: #f1f5f9;
+  --interactive: #2dd4bf;
+  --accent: #2dd4bf;
+  --dot-grid-mix: 30%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  min-height: 100%;
+  background-color: var(--page-bg);
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--border-visible) var(--dot-grid-mix), transparent) 0.5px,
+    transparent 0.5px
+  );
+  background-size: 14px 14px;
+}
+
+body {
+  background: transparent;
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.prose a {
+  color: var(--interactive);
+  border-bottom: 1px solid var(--border);
+  transition:
+    border-color 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.prose a:hover {
+  border-color: var(--interactive);
+  color: var(--text-primary);
+}
+
+::selection {
+  background: var(--surface-raised);
+  color: var(--text-display);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.02em;
+}
+
+/* Prose hardening: blockquotes, code, lists, empty nodes */
+.prose blockquote {
+  padding-left: 1em;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+.prose blockquote p::before,
+.prose blockquote p::after {
+  content: none;
+}
+.prose blockquote > *:first-child {
+  margin-top: 0;
+}
+.prose blockquote > *:last-child {
+  margin-bottom: 0;
+}
+.prose blockquote p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.prose blockquote p + p {
+  margin-top: 0.75em;
+}
+.prose pre {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1em;
+  border-radius: 4px;
+}
+.prose pre code {
+  padding: 0;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.5em;
+}
+.prose li > p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.prose li + li {
+  margin-top: 0.25em;
+}
+.prose p:empty {
+  display: none;
+}
+.prose > *:first-child {
+  margin-top: 0;
+}
+.prose > *:last-child {
+  margin-bottom: 0;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+.prose hr {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+/* Newsletter (beehiiv) — accent signal + mono hierarchy */
+.prose mark {
+  background-color: transparent;
+  color: var(--text-primary);
+  padding: 0;
+  border-radius: 0;
+  font-weight: inherit;
+  border-bottom: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.prose h1 mark,
+.prose h2 mark,
+.prose h3 mark,
+.prose h4 mark {
+  background-color: transparent;
+  color: inherit;
+  border-bottom: none;
+}
+
+.prose iframe[src*="youtube"],
+.prose iframe[src*="youtu.be"],
+.prose iframe[src*="vimeo"],
+.prose iframe[src*="player"] {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  border-radius: 4px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.prose #content-blocks blockquote,
+.prose blockquote.beehiiv-quote {
+  border-left: 3px solid var(--accent);
+  background-color: var(--surface-raised);
+  padding: 1.25em 1.5em;
+  margin: 2em 0;
+  border-radius: 4px;
+}
+.prose #content-blocks blockquote p,
+.prose blockquote.beehiiv-quote p {
+  font-style: italic;
+  font-size: 1.05em;
+  line-height: 1.7;
+  margin: 0 !important;
+  color: var(--text-primary);
+}
+.prose #content-blocks blockquote cite,
+.prose blockquote.beehiiv-quote cite {
+  display: block;
+  margin-top: 0.75em;
+  font-style: normal;
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.prose #content-blocks blockquote cite::before,
+.prose blockquote.beehiiv-quote cite::before {
+  content: "— ";
+}
+
+.prose #content-blocks > div {
+  margin-bottom: 0;
+}
+.prose #content-blocks p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+.prose #content-blocks h1 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+.prose #content-blocks h2 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+.prose #content-blocks h3 {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-top: 1.25em;
+  margin-bottom: 0.4em;
+}
+.prose #content-blocks img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.prose #content-blocks small {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+}
+.prose #content-blocks ul,
+.prose #content-blocks ol {
+  padding-left: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+.prose #content-blocks li {
+  margin-bottom: 0.5em;
+}
