@@ -129,25 +129,27 @@ export default function MachineViewToggle() {
 
   return (
     <>
-      <div className="px-view-switch" role="group" aria-label="View mode">
-        <button
-          type="button"
-          data-active={mode === "human" ? "true" : undefined}
-          aria-pressed={mode === "human"}
-          onClick={() => setMode("human")}
+      {/* Floating toggle pill */}
+      <button
+        onClick={() => setMode(mode === "human" ? "machine" : "human")}
+        className="px-view-switch"
+        aria-label={`Switch to ${mode === "human" ? "machine" : "human"} view`}
+        title={mode === "human" ? "View machine-readable version" : "Return to human view"}
+      >
+        <span
+          className={`px-view-switch__label ${mode === "human" ? "px-view-switch__label--active" : ""}`}
         >
           Human
-        </button>
-        <button
-          type="button"
-          data-active={mode === "machine" ? "true" : undefined}
-          aria-pressed={mode === "machine"}
-          onClick={() => setMode("machine")}
+        </span>
+        <span className="px-view-switch__divider" />
+        <span
+          className={`px-view-switch__label ${mode === "machine" ? "px-view-switch__label--active" : ""}`}
         >
           Machine
-        </button>
-      </div>
+        </span>
+      </button>
 
+      {/* Machine panel overlay */}
       {mode === "machine" && (
         <section
           ref={panelRef}
@@ -156,22 +158,32 @@ export default function MachineViewToggle() {
           tabIndex={-1}
         >
           <div className="px-machine-panel__bar">
-            <a href={mdPath}>Raw .md</a>
-            <button type="button" onClick={() => setMode("human")}>
-              Human view
-            </button>
-            <button
-              type="button"
-              onClick={copyMarkdown}
-              disabled={fetchState.status !== "ready"}
-            >
-              {copied ? "Copied" : "Copy"}
-            </button>
+            <span className="px-machine-panel__bar-label">Machine View</span>
+            <div className="px-machine-panel__bar-actions">
+              <button
+                onClick={copyMarkdown}
+                className="px-machine-panel__btn"
+                disabled={fetchState.status !== "ready"}
+              >
+                {copied ? "Copied" : "Copy"}
+              </button>
+              <a
+                href={mdPath}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-machine-panel__btn"
+              >
+                Raw .md
+              </a>
+              <button onClick={() => setMode("human")} className="px-machine-panel__btn">
+                Esc
+              </button>
+            </div>
           </div>
-          {fetchState.status === "ready" && <pre>{fetchState.body}</pre>}
-          {fetchState.status === "loading" && <pre>Loading {mdPath}</pre>}
-          {fetchState.status === "missing" && <pre>No machine view exists for {pathname}</pre>}
-          {fetchState.status === "error" && <pre>Machine view failed to load.</pre>}
+          {fetchState.status === "ready" && <pre className="px-machine-panel__content">{fetchState.body}</pre>}
+          {fetchState.status === "loading" && <pre className="px-machine-panel__content">Loading {mdPath}</pre>}
+          {fetchState.status === "missing" && <pre className="px-machine-panel__content">No machine view exists for {pathname}</pre>}
+          {fetchState.status === "error" && <pre className="px-machine-panel__content">Machine view failed to load.</pre>}
         </section>
       )}
     </>
