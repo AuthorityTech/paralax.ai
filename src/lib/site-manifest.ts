@@ -52,10 +52,9 @@ export function buildHomePageMarkdown(): string {
 
 > Independent AI search intelligence publication. Daily analysis of how AI engines are reshaping information discovery.
 
-- Site: ${BASE}
+- URL: ${BASE}
 - Feed: ${BASE}/feed.xml
-- LLM context: ${BASE}/llms.txt
-- Blog index: ${BASE}/blog.md
+- llms.txt: ${BASE}/llms.txt
 
 ## Latest Intel
 
@@ -64,7 +63,7 @@ ${
     ? posts
         .map(
           (p) =>
-            `- [${p.title}](${BASE}/blog/${p.slug}) — ${p.description?.slice(0, 140) || ""}  \n  Published: ${p.date} | [Raw .md](${BASE}/blog/${p.slug}.md)`
+            `- [${p.title}](${BASE}/blog/${p.slug}) — ${p.description?.slice(0, 140) || ""}`
         )
         .join("\n")
     : "No posts yet."
