@@ -31,6 +31,16 @@ if (fs.existsSync(robotsSrc)) {
   }
 }
 
+const libChecks = [
+  "src/lib/site-manifest.ts",
+  "src/lib/markdown-route.ts",
+];
+for (const lib of libChecks) {
+  if (!fs.existsSync(path.join(ROOT, lib))) {
+    errors.push(`Missing lib: ${lib}`);
+  }
+}
+
 /* 2. Check .md route handler files exist */
 const routeChecks = [
   "src/app/index.md/route.ts",
@@ -56,7 +66,11 @@ if (fs.existsSync(configPath)) {
 /* 4. Check llms.txt references .md endpoints */
 const llmsPath = path.join(ROOT, "src", "app", "llms.txt", "route.ts");
 if (fs.existsSync(llmsPath)) {
-  const llms = fs.readFileSync(llmsPath, "utf8");
+  let llms = fs.readFileSync(llmsPath, "utf8");
+  const manifestPath = path.join(ROOT, "src/lib/site-manifest.ts");
+  if (llms.includes("buildLlmsTxtBody") && fs.existsSync(manifestPath)) {
+    llms += `\n${fs.readFileSync(manifestPath, "utf8")}`;
+  }
   if (!llms.includes("index.md") || !llms.includes("blog.md")) {
     errors.push("llms.txt route does not reference .md endpoints");
   }
