@@ -1,87 +1,122 @@
 #!/usr/bin/env node
 
-/**
- * crawl-guard.mjs — post-build guard
- * Verifies machine-view .md routes exist in the build output
- * and /blog-md/ is disallowed in robots.txt.
- */
-
 import fs from "node:fs";
 import path from "node:path";
+import { machineViewContract } from "./machine-view-contract.mjs";
 
 const ROOT = process.cwd();
-const errors = [];
-
-/* 1. Check robots.txt contains /blog-md/ disallow */
-const robotsPath = path.join(ROOT, ".next", "server", "app", "robots.txt.body");
-const robotsAlt = path.join(ROOT, ".next", "static", "robots.txt");
-let robotsContent = "";
-for (const p of [robotsPath, robotsAlt]) {
-  if (fs.existsSync(p)) {
-    robotsContent = fs.readFileSync(p, "utf8");
-    break;
-  }
-}
-// Also check the source file
-const robotsSrc = path.join(ROOT, "src", "app", "robots.ts");
-if (fs.existsSync(robotsSrc)) {
-  const src = fs.readFileSync(robotsSrc, "utf8");
-  if (!src.includes("/blog-md/")) {
-    errors.push("robots.ts does not disallow /blog-md/");
-  }
+function resolveOutDir() {
+  const nextApp = path.join(ROOT, ".next", "server", "app");
+  const staticOut = path.join(ROOT, "out");
+  if (fs.existsSync(path.join(nextApp, "index.md.body"))) return nextApp;
+  if (fs.existsSync(path.join(nextApp, "llms.txt.body"))) return nextApp;
+  if (fs.existsSync(staticOut)) return staticOut;
+  return nextApp;
 }
 
-const libChecks = [
-  "src/lib/site-manifest.ts",
-  "src/lib/markdown-route.ts",
-];
-for (const lib of libChecks) {
-  if (!fs.existsSync(path.join(ROOT, lib))) {
-    errors.push(`Missing lib: ${lib}`);
-  }
+const OUT_DIR = resolveOutDir();
+const failures = [];
+
+function fail(location, message) {
+  failures.push({ location, message });
 }
 
-/* 2. Check .md route handler files exist */
-const routeChecks = [
-  "src/app/index.md/route.ts",
-  "src/app/blog.md/route.ts",
-  "src/app/blog-md/[slug]/route.ts",
-];
-for (const route of routeChecks) {
-  const full = path.join(ROOT, route);
-  if (!fs.existsSync(full)) {
-    errors.push(`Missing route handler: ${route}`);
-  }
+function readOutput(relativePath, { required = true } = {}) {
+  const full = path.join(OUT_DIR, relativePath);
+  const body = full + ".body";
+  if (fs.existsSync(full) && fs.statSync(full).isFile()) return fs.readFileSync(full, "utf8");
+  if (fs.existsSync(body) && fs.statSync(body).isFile()) return fs.readFileSync(body, "utf8");
+  if (required) fail(relativePath, "File not found in build output.");
+  return "";
 }
 
-/* 3. Check rewrite config */
-const configPath = path.join(ROOT, "next.config.ts");
-if (fs.existsSync(configPath)) {
-  const config = fs.readFileSync(configPath, "utf8");
-  if (!config.includes("/blog/:slug.md")) {
-    errors.push("next.config.ts missing /blog/:slug.md rewrite");
+function routeExists(relativePath) {
+  const full = path.join(OUT_DIR, relativePath);
+  if (fs.existsSync(full) && fs.statSync(full).isFile()) return true;
+  if (fs.existsSync(full + ".body")) return true;
+  if (fs.existsSync(full) && fs.statSync(full).isDirectory()) {
+    return fs.existsSync(path.join(full, "route.js"));
+  }
+  return false;
+}
+
+function requireIncludes(content, checks, location) {
+  for (const check of checks || []) {
+    if (!content.toLowerCase().includes(String(check).toLowerCase())) {
+      fail(location, `Missing required text: ${check}`);
+    }
   }
 }
 
-/* 4. Check llms.txt references .md endpoints */
-const llmsPath = path.join(ROOT, "src", "app", "llms.txt", "route.ts");
-if (fs.existsSync(llmsPath)) {
-  let llms = fs.readFileSync(llmsPath, "utf8");
-  const manifestPath = path.join(ROOT, "src/lib/site-manifest.ts");
-  if (llms.includes("buildLlmsTxtBody") && fs.existsSync(manifestPath)) {
-    llms += `\n${fs.readFileSync(manifestPath, "utf8")}`;
+function parseFrontmatter(raw) {
+  const match = raw.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return {};
+  const data = {};
+  for (const line of match[1].split("\n")) {
+    const pair = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!pair) continue;
+    data[pair[1]] = pair[2].replace(/^['"]|['"]$/g, "").trim();
   }
-  if (!llms.includes("index.md") || !llms.includes("blog.md")) {
-    errors.push("llms.txt route does not reference .md endpoints");
-  }
+  return data;
 }
 
-/* Report */
-if (errors.length > 0) {
-  console.error("\n❌ crawl-guard failures:");
-  errors.forEach((e) => console.error(`   • ${e}`));
+function slugFromFile(file, data) {
+  if (data.slug) return data.slug;
+  return file.replace(/\.md$/, "").replace(/^\d{4}-\d{2}-\d{2}-/, "");
+}
+
+function newestMarkdownFile(relativeDir) {
+  const dir = path.join(ROOT, relativeDir);
+  if (!fs.existsSync(dir)) return null;
+  const files = fs.readdirSync(dir).filter((name) => name.endsWith(".md") && !name.startsWith("_")).sort();
+  return files.at(-1) || null;
+}
+
+if (!fs.existsSync(OUT_DIR)) {
+  console.error("crawl-guard: build output not found. Run npm run build first.");
   process.exit(1);
-} else {
-  console.log("✅ crawl-guard: all machine-view routes verified");
-  process.exit(0);
 }
+
+for (const page of machineViewContract.staticMarkdown || []) {
+  const content = readOutput(page.path);
+  if (!content) continue;
+  const bytes = Buffer.byteLength(content, "utf8");
+  if (bytes < page.minBytes) {
+    fail(page.path, `Machine markdown too thin: ${bytes} < ${page.minBytes} bytes.`);
+  }
+  requireIncludes(content, page.required, page.path);
+}
+
+if (machineViewContract.llms) {
+  const llms = readOutput(machineViewContract.llms.path);
+  if (llms) requireIncludes(llms, machineViewContract.llms.required, machineViewContract.llms.path);
+}
+
+for (const collection of machineViewContract.contentCollections || []) {
+  const file = newestMarkdownFile(collection.dir);
+  if (!file) {
+    fail(collection.dir, "No markdown content files found for sample route check.");
+    continue;
+  }
+  const raw = fs.readFileSync(path.join(ROOT, collection.dir, file), "utf8");
+  const data = parseFrontmatter(raw);
+  const slug = slugFromFile(file, data);
+  const routePath = `${collection.routePrefix}/${slug}`;
+  if (!routeExists(routePath)) {
+    fail(routePath, "Dynamic markdown route missing in build output.");
+    continue;
+  }
+  const rendered = readOutput(routePath, { required: false });
+  if (rendered && data.title) requireIncludes(rendered, [data.title], routePath);
+}
+
+const robots = readOutput("robots.txt", { required: false });
+if (robots) requireIncludes(robots, ["/blog-md/"], "robots.txt");
+
+if (failures.length) {
+  console.error(`crawl-guard failed with ${failures.length} issue(s):`);
+  for (const failure of failures) console.error(`- [${failure.location}] ${failure.message}`);
+  process.exit(1);
+}
+
+console.log("crawl-guard: machine-readable build output verified.");

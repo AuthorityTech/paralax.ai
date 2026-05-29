@@ -1,24 +1,24 @@
 import { getAllPosts } from "@/lib/posts";
+import { BLOG_COPY } from "@/lib/page-copy";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SITE_SOCIAL_IMAGE } from "@/lib/socialShare";
 const BASE = "https://paralax.ai";
 
 export const metadata: Metadata = {
-  title: "Intel",
-  description:
-    "AI search intelligence — daily analysis of how AI engines are changing discovery, what it means, and who is winning.",
+  title: BLOG_COPY.title,
+  description: BLOG_COPY.metadataDescription,
   alternates: { canonical: `${BASE}/blog` },
   openGraph: {
-    title: "Intel — Paralax",
-    description: "AI search intelligence — daily analysis of how AI engines are changing discovery.",
+    title: `${BLOG_COPY.title} — Paralax`,
+    description: BLOG_COPY.metadataDescription,
     url: `${BASE}/blog`,
     images: [SITE_SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Intel — Paralax",
-    description: "AI search intelligence — daily analysis of how AI engines are changing discovery.",
+    title: `${BLOG_COPY.title} — Paralax`,
+    description: BLOG_COPY.metadataDescription,
     images: [{ url: SITE_SOCIAL_IMAGE.url, alt: SITE_SOCIAL_IMAGE.alt }],
   },
 };
@@ -44,8 +44,8 @@ function buildBlogSchema(posts: ReturnType<typeof getAllPosts>) {
       {
         "@type": "Blog",
         "@id": `${BASE}/blog#blog`,
-        name: "Paralax — AI Search Intelligence",
-        description: "Daily intelligence on AI search engines, discovery shifts, and how machines are reshaping information discovery.",
+        name: BLOG_COPY.schemaName,
+        description: BLOG_COPY.schemaDescription,
         url: `${BASE}/blog`,
         publisher: { "@type": "Organization", "@id": `${BASE}/#organization` },
       },
@@ -53,7 +53,7 @@ function buildBlogSchema(posts: ReturnType<typeof getAllPosts>) {
         "@type": "CollectionPage",
         "@id": `${BASE}/blog#collection`,
         url: `${BASE}/blog`,
-        name: "Intel — Paralax",
+        name: BLOG_COPY.collectionName,
         isPartOf: { "@id": `${BASE}/#website` },
         mainEntity: { "@id": `${BASE}/blog#item-list` },
         breadcrumb: { "@id": `${BASE}/blog#breadcrumb` },
@@ -61,7 +61,7 @@ function buildBlogSchema(posts: ReturnType<typeof getAllPosts>) {
       {
         "@type": "ItemList",
         "@id": `${BASE}/blog#item-list`,
-        name: "Paralax Intel",
+        name: BLOG_COPY.itemListName,
         numberOfItems: itemList.length,
         itemListOrder: "https://schema.org/ItemListOrderDescending",
         itemListElement: itemList,
@@ -71,7 +71,7 @@ function buildBlogSchema(posts: ReturnType<typeof getAllPosts>) {
         "@id": `${BASE}/blog#breadcrumb`,
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: { "@type": "WebPage", "@id": BASE, name: "Home" } },
-          { "@type": "ListItem", position: 2, name: "Intel", item: { "@type": "WebPage", "@id": `${BASE}/blog`, name: "Intel" } },
+          { "@type": "ListItem", position: 2, name: BLOG_COPY.heading, item: { "@type": "WebPage", "@id": `${BASE}/blog`, name: BLOG_COPY.heading } },
         ],
       },
     ],
@@ -125,9 +125,11 @@ export default function BlogPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }} />
 
       <header className="mb-16">
-        <h1 className="font-display mb-3 text-[2rem] font-medium leading-tight tracking-[-0.02em] text-nothing-display">Intel</h1>
+        <h1 className="font-display mb-3 text-[2rem] font-medium leading-tight tracking-[-0.02em] text-nothing-display">
+          {BLOG_COPY.heading}
+        </h1>
         <p className="max-w-xl text-[14px] font-light leading-relaxed text-nothing-secondary">
-          AI search intelligence — daily analysis of how AI engines are changing discovery, what it means, and who is adapting.
+          {BLOG_COPY.visibleDescription}
         </p>
       </header>
 
@@ -136,7 +138,7 @@ export default function BlogPage() {
           <PostList posts={all} />
         </section>
       ) : (
-        <p className="text-[14px] text-nothing-secondary">First dispatches incoming.</p>
+        <p className="text-[14px] text-nothing-secondary">{BLOG_COPY.emptyWriting}</p>
       )}
     </div>
   );

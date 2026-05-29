@@ -1,4 +1,5 @@
 import { getAllPosts } from "@/lib/posts";
+import { HOME_COPY } from "@/lib/page-copy";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
@@ -8,16 +9,14 @@ export const metadata: Metadata = {
   alternates: { canonical: SITE_URL },
   openGraph: {
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
-    description:
-      "Daily intelligence on AI search engines, discovery shifts, and how machines are reshaping how information is found.",
+    description: HOME_COPY.machineSummary,
     url: SITE_URL,
     images: [SITE_SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
-    description:
-      "Daily intelligence on AI search engines, discovery shifts, and how machines are reshaping how information is found.",
+    description: HOME_COPY.machineSummary,
     images: [{ url: SITE_SOCIAL_IMAGE.url, alt: SITE_SOCIAL_IMAGE.alt }],
   },
 };
@@ -37,11 +36,10 @@ export default function HomePage() {
           paralax<span className="text-link">_</span>
         </h1>
         <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.1em] text-nothing-secondary">
-          AI Search Intelligence
+          {HOME_COPY.label}
         </p>
         <p className="mt-6 max-w-xl text-[15px] font-light leading-[1.65] text-nothing-secondary">
-          Daily intelligence on AI search engines, discovery shifts, and how machines are reshaping
-          how information is found. Independent analysis — no sponsors, no affiliations.
+          {HOME_COPY.summary}
         </p>
       </section>
 
@@ -50,7 +48,9 @@ export default function HomePage() {
       {posts.length > 0 && (
         <section>
           <div className="mb-10 flex items-center justify-between">
-            <h2 className="font-mono text-[11px] font-normal uppercase tracking-[0.1em] text-nothing-secondary">Latest Intel</h2>
+            <h2 className="font-mono text-[11px] font-normal uppercase tracking-[0.1em] text-nothing-secondary">
+              {HOME_COPY.latestHeading}
+            </h2>
             <Link
               href="/blog"
               className="font-mono text-[11px] uppercase tracking-[0.08em] text-link transition-colors duration-200 ease-nothing hover:text-nothing-primary"
@@ -78,7 +78,7 @@ export default function HomePage() {
 
       {posts.length === 0 && (
         <section>
-          <p className="text-[14px] text-nothing-secondary">First dispatches incoming.</p>
+          <p className="text-[14px] text-nothing-secondary">{HOME_COPY.emptyWriting}</p>
         </section>
       )}
     </div>

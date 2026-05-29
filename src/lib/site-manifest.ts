@@ -1,4 +1,5 @@
 import { getAllPosts } from "./posts";
+import { BLOG_COPY, HOME_COPY } from "./page-copy";
 
 const BASE = "https://paralax.ai";
 
@@ -7,7 +8,7 @@ export function buildLlmsTxtBody(): string {
 
   return `# Paralax
 
-> Independent AI search intelligence publication. Daily analysis of how AI engines are reshaping information discovery.
+> ${HOME_COPY.machineSummary}
 
 ## Machine-Readable Endpoints
 
@@ -48,15 +49,15 @@ ${
 export function buildHomePageMarkdown(): string {
   const posts = getAllPosts().slice(0, 10);
 
-  return `# Paralax — AI Search Intelligence
+  return `# ${HOME_COPY.machineTitle}
 
-> Independent AI search intelligence publication. Daily analysis of how AI engines are reshaping information discovery.
+> ${HOME_COPY.machineSummary}
 
 - URL: ${BASE}
 - Feed: ${BASE}/feed.xml
 - llms.txt: ${BASE}/llms.txt
 
-## Latest Intel
+## ${HOME_COPY.latestHeading}
 
 ${
   posts.length > 0
@@ -66,7 +67,7 @@ ${
             `- [${p.title}](${BASE}/blog/${p.slug}) — ${p.description?.slice(0, 140) || ""}`
         )
         .join("\n")
-    : "No posts yet."
+    : HOME_COPY.emptyWriting
 }
 `;
 }
@@ -74,9 +75,9 @@ ${
 export function buildBlogIndexMarkdown(): string {
   const posts = getAllPosts();
 
-  return `# Paralax Intel — Blog Index
+  return `# ${BLOG_COPY.machineTitle}
 
-> All published articles from Paralax, the AI search intelligence publication.
+> ${BLOG_COPY.machineDescription}
 
 Total articles: ${posts.length}
 
@@ -96,7 +97,7 @@ ${p.description || ""}
 - Raw: [${p.slug}.md](${BASE}/blog/${p.slug}.md)`
         )
         .join("\n\n")
-    : "No posts yet."
+    : BLOG_COPY.emptyWriting
 }
 `;
 }
