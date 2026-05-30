@@ -9,8 +9,6 @@ researchBriefPath: "editorial/data/research-briefs/2026/05/30/paralax/web-rebuil
 researchQualityScore: 4.5
 ---
 
-<!-- DRAFT: Write body content below this line. -->
-
 The web is being rebuilt for AI agents because agents do not browse like people. They query, retrieve, fan out, summarize, and disappear. That makes source architecture more important than pageviews: a brand now has to be legible to retrieval systems before it can be persuasive to human readers.
 
 AWS made the shift concrete on May 28, 2026, when it announced the next generation of Amazon OpenSearch Serverless for "agentic AI applications." The product detail matters less than the architecture signal: infrastructure providers are now designing search systems around bursty, machine-driven retrieval instead of steady human sessions.
