@@ -12,6 +12,7 @@
     "machine:parity": "node scripts/validate-machine-view-parity.mjs",
     "smoke": "bash scripts/smoke-check.sh",
     "gsc:check": "bash scripts/gsc-check.sh",
+    "gsc:submit-sitemaps": "bash scripts/gsc-check.sh --submit",
     "vercel:status": "bash scripts/vercel-status.sh",
     "indexnow": "node scripts/ping-indexnow.mjs",
     "indexnow:all": "node scripts/ping-indexnow.mjs --all"
