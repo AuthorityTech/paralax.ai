@@ -31,6 +31,7 @@ export default async function Image({ params }: Props) {
 
   const shareDate = formatPostShareDate(post.date);
   const shareTags = formatPostShareMainTags(post.tags);
+  const shareTitle = post.title;
 
   return new ImageResponse(
     (
@@ -79,7 +80,16 @@ export default async function Image({ params }: Props) {
             borderRadius: 999,
           }}
         />
-        <div style={{ position: "absolute", left: 108, right: 108, bottom: 126, display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            position: "absolute",
+            left: 108,
+            right: 108,
+            bottom: 126,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           {Array.from({ length: 36 }).map((_, idx) => (
             <div
               key={idx}
@@ -95,10 +105,10 @@ export default async function Image({ params }: Props) {
         <div
           style={{
             position: "absolute",
-            left: 240,
-            right: 240,
-            top: 126,
-            bottom: 126,
+            left: 176,
+            right: 176,
+            top: 94,
+            bottom: 112,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -120,12 +130,27 @@ export default async function Image({ params }: Props) {
           <div style={{ width: 40, height: 2, marginTop: 22, background: POST_SHARE_COLORS.accent }} />
           <div
             style={{
-              marginTop: 24,
+              marginTop: 26,
+              fontFamily: "Inter, Arial, sans-serif",
+              fontSize: 42,
+              lineHeight: 1.08,
+              letterSpacing: "-0.7px",
+              fontWeight: 600,
+              maxWidth: 820,
+            }}
+          >
+            {shareTitle}
+          </div>
+          <div
+            style={{
+              marginTop: 22,
               fontFamily: "Menlo, Consolas, monospace",
-              fontSize: 34,
+              fontSize: 19,
               lineHeight: 1.15,
-              letterSpacing: "-0.25px",
+              letterSpacing: "1.8px",
               fontWeight: 500,
+              color: POST_SHARE_COLORS.muted,
+              textTransform: "uppercase",
             }}
           >
             {shareTags}

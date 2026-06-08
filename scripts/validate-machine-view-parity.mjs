@@ -37,6 +37,22 @@ for (const check of machineViewContract.requiredSourceText || []) {
   }
 }
 
+for (const family of machineViewContract.assetRouteFamilies || []) {
+  for (const check of family.sourceAssertions || []) {
+    if (!fs.existsSync(path.join(ROOT, check.file))) {
+      fail(check.file, `Missing source file for ${family.name} asset policy check.`);
+      continue;
+    }
+    const content = read(check.file);
+    if (check.text && !content.includes(check.text)) {
+      fail(check.file, check.message || `${family.name} missing required source text: ${check.text}`);
+    }
+    if (check.forbiddenText && content.includes(check.forbiddenText)) {
+      fail(check.file, check.message || `${family.name} contains forbidden source text: ${check.forbiddenText}`);
+    }
+  }
+}
+
 for (const collection of machineViewContract.contentCollections || []) {
   const files = listMarkdownFiles(collection.dir);
   if (files.length < (collection.minFiles || 1)) {

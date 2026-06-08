@@ -5,8 +5,8 @@ import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import remarkHtml from "remark-html";
 import type { Metadata } from "next";
+import NextImage from "next/image";
 import Link from "next/link";
-import PostShareCard from "@/components/PostShareCard";
 import { buildSearchTitle } from "@/lib/seo";
 import {
   formatPostDisplayDate,
@@ -75,6 +75,7 @@ export default async function PostPage({ params }: Props) {
   const html = normalizeProseHtml(processed.toString());
 
   const image = getPostShareImageUrl(slug);
+  const imageAlt = `${post.title} — Paralax intelligence image`;
 
   const blogLd = generateBlogJsonLd(
     {
@@ -130,7 +131,19 @@ export default async function PostPage({ params }: Props) {
         </div>
       </header>
 
-      <PostShareCard date={post.date} tags={post.tags} />
+      <figure className="mb-12">
+        <NextImage
+          src={`/blog/${slug}/opengraph-image`}
+          width={POST_SHARE_IMAGE_WIDTH}
+          height={POST_SHARE_IMAGE_HEIGHT}
+          alt={imageAlt}
+          unoptimized
+          className="aspect-[1200/630] w-full rounded-[4px] border border-nothing-border object-cover"
+        />
+        <figcaption className="mt-3 font-mono text-[10px] uppercase tracking-[0.08em] text-nothing-disabled">
+          Visual summary for this Paralax analysis.
+        </figcaption>
+      </figure>
 
       <div
         className="prose prose-nothing max-w-none prose-p:mb-5 prose-p:leading-[1.75] prose-p:text-nothing-primary prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-nothing-display prose-a:text-link prose-a:no-underline prose-strong:text-nothing-primary prose-li:text-nothing-secondary prose-blockquote:border-nothing-border prose-blockquote:text-nothing-secondary prose-code:text-nothing-primary prose-pre:rounded prose-pre:border prose-pre:border-nothing-border prose-pre:bg-nothing-raised prose-hr:border-nothing-border prose-h2:mb-4 prose-h2:mt-10 hover:prose-a:text-nothing-primary"
