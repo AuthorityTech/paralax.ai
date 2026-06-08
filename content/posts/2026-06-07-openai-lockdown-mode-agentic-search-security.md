@@ -1,5 +1,6 @@
 ---
 title: "OpenAI Lockdown Mode Turns Agentic Search Security Into A Product Tradeoff"
+seoTitle: "OpenAI Lockdown Mode Makes Agentic Search a Security Tradeoff"
 date: "2026-06-07"
 slug: "openai-lockdown-mode-agentic-search-security"
 description: "OpenAI's Lockdown Mode shows agentic search now has a security-versus-freshness tradeoff."

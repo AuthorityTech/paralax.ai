@@ -1,5 +1,6 @@
 ---
 title: "Google's AI Search Controls Make Publisher Policy a Retrieval Issue"
+seoTitle: "Google AI Search Controls Make Publisher Policy a Retrieval Issue"
 date: "2026-06-04"
 slug: "google-ai-search-controls-publisher-policy"
 description: "Google's AI Search controls turn publisher inclusion into a retrieval-governance decision."

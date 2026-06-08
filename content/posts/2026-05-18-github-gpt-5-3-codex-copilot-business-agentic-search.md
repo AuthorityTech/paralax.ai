@@ -1,5 +1,6 @@
 ---
 title: "GitHub's GPT-5.3-Codex Default Turns Copilot Into an Enterprise Answer Layer"
+seoTitle: "GitHub GPT-5.3-Codex Makes Copilot an Enterprise Answer Layer"
 date: "2026-05-18"
 slug: "github-gpt-5-3-codex-copilot-business-agentic-search"
 description: "GitHub's Copilot base-model change shows enterprise AI search is moving from optional model choice to governed defaults."

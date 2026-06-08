@@ -1,4 +1,5 @@
 import { getPost } from "@/lib/posts";
+import { normalizeMarkdown } from "@/lib/normalizeMarkdown";
 import {
   buildBlogIndexMarkdown,
   buildHomePageMarkdown,
@@ -38,6 +39,6 @@ export function blogPostMarkdown(slug: string): string | null {
 
 ---
 
-${post.content.trim()}
+${normalizeMarkdown(post.content).trim()}
 `;
 }

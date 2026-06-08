@@ -7,6 +7,7 @@ import remarkHtml from "remark-html";
 import type { Metadata } from "next";
 import Link from "next/link";
 import PostShareCard from "@/components/PostShareCard";
+import { buildSearchTitle } from "@/lib/seo";
 import {
   formatPostDisplayDate,
   getPostShareImageUrl,
@@ -34,12 +35,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return {};
   const image = getPostShareImageUrl(slug);
   const imageAlt = `${post.title} — Paralax intelligence image`;
+  const searchTitle = buildSearchTitle(post.seoTitle || post.title);
   return {
-    title: post.title,
+    title: { absolute: searchTitle },
     description: post.description,
     alternates: { canonical: `${BASE}/blog/${slug}` },
     openGraph: {
-      title: post.title + " — Paralax",
+      title: searchTitle,
       description: post.description,
       type: "article",
       url: `${BASE}/blog/${slug}`,
@@ -49,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title + " — Paralax",
+      title: searchTitle,
       description: post.description,
       images: [{ url: image, alt: imageAlt }],
     },

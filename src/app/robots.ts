@@ -7,12 +7,14 @@ const AI_AND_SEARCH_BOTS = ["Googlebot","Bingbot","PerplexityBot","GPTBot","Chat
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: "*", allow: "/", disallow: "/blog-md/" },
-      { userAgent: AI_AND_SEARCH_BOTS, allow: "/" },
+      { userAgent: "*", allow: ["/", "/blog-md/", "/machine-manifest.json"] },
+      { userAgent: AI_AND_SEARCH_BOTS, allow: ["/", "/blog-md/", "/machine-manifest.json"] },
     ],
     sitemap: [
       "https://paralax.ai/sitemap.xml",
+      "https://paralax.ai/pages/sitemap.xml",
       "https://paralax.ai/blog/sitemap.xml",
+      "https://paralax.ai/machine/sitemap.xml",
     ],
   };
 }

@@ -1,5 +1,6 @@
 ---
 title: "CNN's Perplexity Lawsuit Makes AI Search Attribution a Product Risk"
+seoTitle: "CNN Perplexity Lawsuit Makes AI Attribution a Product Risk"
 date: "2026-05-29"
 slug: "cnn-perplexity-lawsuit-ai-search-attribution-risk"
 description: "CNN's Perplexity suit shows attribution is becoming an AI search product requirement, not a publisher courtesy."
