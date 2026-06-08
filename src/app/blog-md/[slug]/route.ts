@@ -6,4 +6,5 @@ export const { dynamic, revalidate, generateStaticParams, GET } =
   createSlugMarkdownRouteHandlers({
     getSlugs: () => getAllPosts().map((post) => post.slug),
     getMarkdown: blogPostMarkdown,
+    getCanonicalUrl: (slug) => `https://paralax.ai/blog/${slug}`,
   });

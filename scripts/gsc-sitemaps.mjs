@@ -8,12 +8,19 @@ const DEFAULT_SITEMAPS = [
   "https://paralax.ai/sitemap.xml",
   "https://paralax.ai/pages/sitemap.xml",
   "https://paralax.ai/blog/sitemap.xml",
-  "https://paralax.ai/machine/sitemap.xml",
 ];
 
 function arg(name, fallback = "") {
-  const hit = process.argv.slice(2).find((entry) => entry.startsWith(`--${name}=`));
-  return hit ? hit.split("=").slice(1).join("=") : fallback;
+  const args = process.argv.slice(2);
+  const inline = args.find((entry) => entry.startsWith(`--${name}=`));
+  if (inline) return inline.split("=").slice(1).join("=");
+
+  const index = args.indexOf(`--${name}`);
+  if (index >= 0 && args[index + 1] && !args[index + 1].startsWith("--")) {
+    return args[index + 1];
+  }
+
+  return fallback;
 }
 
 function hasFlag(name) {
@@ -104,6 +111,18 @@ async function submitSitemap(token, siteUrl, sitemapUrl) {
   return res.status;
 }
 
+async function deleteSitemap(token, siteUrl, sitemapUrl) {
+  const res = await fetch(
+    `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/sitemaps/${encodeURIComponent(sitemapUrl)}`,
+    {
+      method: "DELETE",
+      headers: { authorization: `Bearer ${token}` },
+    }
+  );
+  if (!res.ok) throw new Error(`${sitemapUrl}: delete failed (${res.status}): ${await res.text()}`);
+  return res.status;
+}
+
 async function listSitemaps(token, siteUrl) {
   const res = await fetch(
     `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/sitemaps`,
@@ -119,8 +138,13 @@ async function main() {
   const siteUrl = arg("site", process.env.SEARCH_CONSOLE_SITE_URL || DEFAULT_SITE_URL);
   const sitemaps = configuredSitemaps();
   const submit = hasFlag("submit");
+  const deleteRequested = hasFlag("delete");
+  if (submit && deleteRequested) throw new Error("Use either --submit or --delete, not both.");
+  if (deleteRequested && !arg("sitemaps")) {
+    throw new Error("--delete requires an explicit --sitemaps value.");
+  }
   const token = await accessToken(
-    submit
+    submit || deleteRequested
       ? "https://www.googleapis.com/auth/webmasters"
       : "https://www.googleapis.com/auth/webmasters.readonly"
   );
@@ -129,6 +153,13 @@ async function main() {
     for (const sitemap of sitemaps) {
       const status = await submitSitemap(token, siteUrl, sitemap);
       console.log(`submitted\t${status}\t${sitemap}`);
+    }
+  }
+
+  if (deleteRequested) {
+    for (const sitemap of sitemaps) {
+      const status = await deleteSitemap(token, siteUrl, sitemap);
+      console.log(`deleted\t${status}\t${sitemap}`);
     }
   }
 

@@ -248,8 +248,28 @@ for (const collection of machineViewContract.contentCollections || []) {
   }
 }
 
-const robots = readOutput("robots.txt", { required: false });
-if (robots) requireIncludes(robots, ["/blog-md/", "/machine-manifest.json", "/machine/sitemap.xml"], "robots.txt");
+if (machineViewContract.searchSitemapPolicy) {
+  const policy = machineViewContract.searchSitemapPolicy;
+  const robots = readOutput(policy.robotsPath, { required: false });
+  if (robots) {
+    requireIncludes(robots, policy.requiredHumanSitemaps, policy.robotsPath);
+    for (const forbidden of policy.forbiddenMachineSitemaps || []) {
+      if (robots.includes(forbidden)) {
+        fail(policy.robotsPath, `Machine sitemap must not be advertised to search crawlers: ${forbidden}`);
+      }
+    }
+  }
+
+  const rootSitemap = readOutput(policy.rootSitemapPath, { required: false });
+  if (rootSitemap) {
+    requireIncludes(rootSitemap, ["/pages/sitemap.xml", "/blog/sitemap.xml"], policy.rootSitemapPath);
+    for (const forbidden of policy.forbiddenMachineSitemaps || []) {
+      if (rootSitemap.includes(forbidden)) {
+        fail(policy.rootSitemapPath, `Machine sitemap must not be listed in the root search sitemap: ${forbidden}`);
+      }
+    }
+  }
+}
 
 if (failures.length) {
   console.error(`crawl-guard failed with ${failures.length} issue(s):`);

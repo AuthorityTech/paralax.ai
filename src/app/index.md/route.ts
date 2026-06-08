@@ -4,5 +4,7 @@ export const revalidate = 3600;
 import { markdownResponse, homePageMarkdown } from "@/lib/machine-content";
 
 export function GET(): Response {
-  return markdownResponse(homePageMarkdown());
+  return markdownResponse(homePageMarkdown(), {
+    canonicalUrl: "https://paralax.ai",
+  });
 }

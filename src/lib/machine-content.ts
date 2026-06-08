@@ -7,12 +7,25 @@ import {
 
 const BASE = "https://paralax.ai";
 
-export function markdownResponse(body: string): Response {
+type MarkdownResponseOptions = {
+  canonicalUrl?: string;
+};
+
+export function markdownResponse(
+  body: string,
+  options: MarkdownResponseOptions = {}
+): Response {
+  const headers: Record<string, string> = {
+    "Content-Type": "text/markdown; charset=utf-8",
+    "Cache-Control": "public, max-age=3600, s-maxage=86400",
+  };
+
+  if (options.canonicalUrl) {
+    headers.Link = `<${options.canonicalUrl}>; rel="canonical"`;
+  }
+
   return new Response(body, {
-    headers: {
-      "Content-Type": "text/markdown; charset=utf-8",
-      "Cache-Control": "public, max-age=3600, s-maxage=86400",
-    },
+    headers,
   });
 }
 

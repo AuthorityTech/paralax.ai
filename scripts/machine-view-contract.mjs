@@ -35,6 +35,11 @@ export const machineViewContract = {
     { file: "src/lib/seo.ts", text: "MAX_SEARCH_TITLE_LENGTH = 70" },
     { file: "src/lib/machine-content.ts", text: "buildHomePageMarkdown" },
     { file: "src/lib/machine-content.ts", text: "buildBlogIndexMarkdown" },
+    { file: "src/lib/machine-content.ts", text: 'rel="canonical"' },
+    { file: "src/lib/markdown-route.ts", text: "getCanonicalUrl" },
+    { file: "src/app/index.md/route.ts", text: "https://paralax.ai" },
+    { file: "src/app/blog.md/route.ts", text: "https://paralax.ai/blog" },
+    { file: "src/app/blog-md/[slug]/route.ts", text: "https://paralax.ai/blog/${slug}" },
   ],
   contentCollections: [
     {
@@ -68,5 +73,11 @@ export const machineViewContract = {
   sitemap: {
     path: "machine/sitemap.xml",
     required: ["/index.md", "/blog.md", "/llms.txt", "/machine-manifest.json", "/blog/"],
+  },
+  searchSitemapPolicy: {
+    rootSitemapPath: "sitemap.xml",
+    robotsPath: "robots.txt",
+    requiredHumanSitemaps: ["/sitemap.xml", "/pages/sitemap.xml", "/blog/sitemap.xml"],
+    forbiddenMachineSitemaps: ["/machine/sitemap.xml"],
   },
 };
