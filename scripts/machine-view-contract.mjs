@@ -25,6 +25,8 @@ export const machineViewContract = {
     { file: "src/lib/site-manifest.ts", text: "/index.md" },
     { file: "src/lib/site-manifest.ts", text: "/blog.md" },
     { file: "src/lib/site-manifest.ts", text: "/machine-manifest.json" },
+    { file: "src/lib/site-manifest.ts", text: "canonicalUrl" },
+    { file: "src/lib/site-manifest.ts", text: "machineUrl" },
     { file: "src/lib/site-manifest.ts", text: "blog/{slug}.md" },
     { file: "src/app/page.tsx", text: 'import { HOME_COPY } from "@/lib/page-copy"' },
     { file: "src/app/page.tsx", text: "HOME_COPY.summary" },
@@ -36,6 +38,8 @@ export const machineViewContract = {
     { file: "src/lib/machine-content.ts", text: "buildHomePageMarkdown" },
     { file: "src/lib/machine-content.ts", text: "buildBlogIndexMarkdown" },
     { file: "src/lib/machine-content.ts", text: 'rel="canonical"' },
+    { file: "src/lib/machine-content.ts", text: "googlebot: noindex, follow" },
+    { file: "src/lib/machine-content.ts", text: "bingbot: noindex, follow" },
     { file: "src/lib/markdown-route.ts", text: "getCanonicalUrl" },
     { file: "src/app/index.md/route.ts", text: "https://paralax.ai" },
     { file: "src/app/blog.md/route.ts", text: "https://paralax.ai/blog" },
@@ -68,7 +72,7 @@ export const machineViewContract = {
   manifest: {
     path: "machine-manifest.json",
     requiredRouteTypes: ["home", "blog-index", "article"],
-    requiredText: ["https://paralax.ai/index.md", "https://paralax.ai/blog.md"],
+    requiredText: ["canonicalUrl", "machineUrl", "https://paralax.ai/index.md", "https://paralax.ai/blog.md"],
   },
   sitemap: {
     path: "machine/sitemap.xml",

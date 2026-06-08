@@ -15,13 +15,15 @@ export function markdownResponse(
   body: string,
   options: MarkdownResponseOptions = {}
 ): Response {
-  const headers: Record<string, string> = {
+  const headers = new Headers({
     "Content-Type": "text/markdown; charset=utf-8",
     "Cache-Control": "public, max-age=3600, s-maxage=86400",
-  };
+  });
 
   if (options.canonicalUrl) {
-    headers.Link = `<${options.canonicalUrl}>; rel="canonical"`;
+    headers.set("Link", `<${options.canonicalUrl}>; rel="canonical"`);
+    headers.append("X-Robots-Tag", "googlebot: noindex, follow");
+    headers.append("X-Robots-Tag", "bingbot: noindex, follow");
   }
 
   return new Response(body, {

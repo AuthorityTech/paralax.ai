@@ -117,7 +117,9 @@ function validateManifest(content, config) {
     if (!route.title || typeof route.title !== "string") fail(location, "Missing route title.");
     if (!route.summary || typeof route.summary !== "string") fail(location, "Missing route summary.");
     validateUrlField(location, "url", route.url);
+    validateUrlField(location, "canonicalUrl", route.canonicalUrl);
     validateUrlField(location, "markdownUrl", route.markdownUrl);
+    validateUrlField(location, "machineUrl", route.machineUrl);
     validateLink(location, "primaryConcept", route.primaryConcept);
     validateUrlArray(location, "relatedPages", route.relatedPages || []);
     validateLinkArray(location, "relatedConcepts", route.relatedConcepts || []);

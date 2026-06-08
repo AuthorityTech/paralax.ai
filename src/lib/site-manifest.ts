@@ -17,10 +17,12 @@ type MachineLink = {
 
 type ManifestRoute = {
   url: string;
+  canonicalUrl: string;
   type: "home" | "blog-index" | "article";
   title: string;
   summary: string;
   markdownUrl: string;
+  machineUrl: string;
   primaryConcept: MachineLink;
   concepts: string[];
   entities: string[];
@@ -180,10 +182,12 @@ export function buildMachineManifest() {
 
     return {
       url,
+      canonicalUrl: url,
       type: "article" as const,
       title: cleanText(post.title, 140),
       summary,
       markdownUrl: absoluteUrl(`/blog/${post.slug}.md`),
+      machineUrl: absoluteUrl(`/blog/${post.slug}.md`),
       primaryConcept,
       concepts,
       entities: ["Paralax"],
@@ -205,10 +209,12 @@ export function buildMachineManifest() {
   const routes: ManifestRoute[] = [
     {
       url: BASE,
+      canonicalUrl: BASE,
       type: "home",
       title: HOME_COPY.machineTitle,
       summary: cleanText(HOME_COPY.machineSummary),
       markdownUrl: absoluteUrl("/index.md"),
+      machineUrl: absoluteUrl("/index.md"),
       primaryConcept: { label: "AI search intelligence", url: absoluteUrl("/blog") },
       concepts: ["AI search", "AI discovery", "machine-mediated discovery"],
       entities: ["Paralax"],
@@ -227,10 +233,12 @@ export function buildMachineManifest() {
     },
     {
       url: absoluteUrl("/blog"),
+      canonicalUrl: absoluteUrl("/blog"),
       type: "blog-index",
       title: BLOG_COPY.machineTitle,
       summary: cleanText(BLOG_COPY.machineDescription),
       markdownUrl: absoluteUrl("/blog.md"),
+      machineUrl: absoluteUrl("/blog.md"),
       primaryConcept: { label: "AI search intelligence", url: absoluteUrl("/blog") },
       concepts: ["AI search intelligence", "answer engines", "generative search"],
       entities: ["Paralax"],
