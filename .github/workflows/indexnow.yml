@@ -1,0 +1,121 @@
+name: IndexNow Submit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/posts/**"
+      - "src/app/blog/**"
+      - "src/app/blog-md/**"
+      - "src/app/blog/sitemap.ts"
+      - "src/app/sitemap.xml/route.ts"
+      - "src/app/machine/sitemap.ts"
+      - "src/app/machine-manifest.json/route.ts"
+      - "src/lib/posts.ts"
+      - "src/lib/site-manifest.ts"
+      - "scripts/ping-indexnow.mjs"
+      - ".github/workflows/indexnow.yml"
+  workflow_dispatch:
+    inputs:
+      submit_all:
+        description: "Submit all post URLs instead of changed URLs"
+        required: false
+        default: "false"
+        type: choice
+        options: ["false", "true"]
+      urls:
+        description: "Optional comma- or space-separated absolute URLs"
+        required: false
+        type: string
+
+concurrency:
+  group: indexnow-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for production deploy window
+        run: sleep 120
+
+      - name: Collect target URLs
+        id: urls
+        env:
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          GITHUB_EVENT_AFTER: ${{ github.sha }}
+          SUBMIT_ALL: ${{ github.event.inputs.submit_all || 'false' }}
+          MANUAL_URLS: ${{ github.event.inputs.urls || '' }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "$MANUAL_URLS" ]; then
+            node scripts/ping-indexnow.mjs --print --urls "$MANUAL_URLS" > /tmp/indexnow_urls.txt
+          elif [ "$SUBMIT_ALL" = "true" ]; then
+            node scripts/ping-indexnow.mjs --print --all > /tmp/indexnow_urls.txt
+          else
+            node scripts/ping-indexnow.mjs --print > /tmp/indexnow_urls.txt
+          fi
+
+          if [ ! -s /tmp/indexnow_urls.txt ]; then
+            echo "No URLs to submit."
+            echo "has_urls=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "has_urls=true" >> "$GITHUB_OUTPUT"
+          echo "Targets:"
+          cat /tmp/indexnow_urls.txt
+
+      - name: Check production availability
+        if: steps.urls.outputs.has_urls == 'true'
+        run: |
+          set -euo pipefail
+          first_url="$(head -n 1 /tmp/indexnow_urls.txt)"
+          echo "Checking $first_url"
+          for i in $(seq 1 30); do
+            status="$(curl -sS -o /dev/null -w '%{http_code}' -A 'paralax-indexnow-github-action' "${first_url}?indexnow_wait=${GITHUB_SHA}")"
+            if [ "$status" = "200" ]; then
+              echo "Production URL is live."
+              exit 0
+            fi
+            echo "Production returned $status; retry $i/30"
+            sleep 10
+          done
+          echo "Production URL did not become available before IndexNow submission."
+          exit 1
+
+      - name: Submit to IndexNow
+        if: steps.urls.outputs.has_urls == 'true'
+        env:
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          GITHUB_EVENT_AFTER: ${{ github.sha }}
+          SUBMIT_ALL: ${{ github.event.inputs.submit_all || 'false' }}
+          MANUAL_URLS: ${{ github.event.inputs.urls || '' }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "$MANUAL_URLS" ]; then
+            node scripts/ping-indexnow.mjs --urls "$MANUAL_URLS"
+          elif [ "$SUBMIT_ALL" = "true" ]; then
+            node scripts/ping-indexnow.mjs --all
+          else
+            node scripts/ping-indexnow.mjs
+          fi

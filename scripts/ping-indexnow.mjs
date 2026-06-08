@@ -8,6 +8,7 @@
  * Usage:
  *   node scripts/ping-indexnow.mjs          # auto-detect via git diff
  *   node scripts/ping-indexnow.mjs --all    # submit every post URL
+ *   node scripts/ping-indexnow.mjs --print  # print URLs only
  *   node scripts/ping-indexnow.mjs --urls https://paralax.ai/blog/my-post
  */
 
@@ -16,6 +17,7 @@ import { readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+const PRINT_ONLY = process.argv.slice(2).includes("--print");
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 
@@ -47,19 +49,29 @@ function git(cmd) {
   }
 }
 
+function pushRangeFromEnv() {
+  const before = process.env.GITHUB_EVENT_BEFORE || process.env.GITHUB_BEFORE || "";
+  const after = process.env.GITHUB_EVENT_AFTER || process.env.GITHUB_SHA || "";
+  if (!before || !after || /^0+$/.test(before)) return null;
+  return { before, after };
+}
+
 // ---------------------------------------------------------------------------
 // URL collection strategies
 // ---------------------------------------------------------------------------
 
 function urlsFromGitDiff() {
-  const diff = git("git diff --name-only HEAD~1 HEAD");
+  const range = pushRangeFromEnv();
+  const diff = range
+    ? git(`git diff --name-only ${range.before} ${range.after}`)
+    : git("git diff --name-only HEAD~1 HEAD");
   if (!diff) return null; // shallow clone or no history
 
   const files = diff.split("\n").filter(Boolean);
   const postFiles = files.filter((f) => f.startsWith("content/posts/") && f.endsWith(".md"));
 
   if (postFiles.length === 0) {
-    console.log("No post changes detected in last commit.");
+    if (!PRINT_ONLY) console.log("No post changes detected in last commit.");
     return [];
   }
 
@@ -70,7 +82,7 @@ function urlsFromGitDiff() {
 }
 
 function urlsFromGitLsFiles() {
-  console.log("Falling back to git ls-files (shallow clone detected).");
+  if (!PRINT_ONLY) console.log("Falling back to git ls-files (shallow clone detected).");
   const ls = git("git ls-files -- content/posts/");
   if (!ls) return [];
 
@@ -81,6 +93,7 @@ function urlsFromGitLsFiles() {
 }
 
 function urlsFromAllPosts() {
+  if (!PRINT_ONLY) console.log("Submitting all post URLs.");
   const postsDir = resolve(ROOT, "content/posts");
   const files = readdirSync(postsDir).filter((f) => f.endsWith(".md"));
   const urls = files.map((f) => postFileToUrl(`content/posts/${f}`));
@@ -102,11 +115,11 @@ function urlsFromFlag(raw) {
 
 async function main() {
   const args = process.argv.slice(2);
+  const printOnly = args.includes("--print");
 
   let urls;
 
   if (args.includes("--all")) {
-    console.log("Submitting all post URLs.");
     urls = urlsFromAllPosts();
   } else if (args.includes("--urls")) {
     const idx = args.indexOf("--urls");
@@ -122,12 +135,17 @@ async function main() {
   }
 
   if (urls.length === 0) {
-    console.log("Nothing to submit. Exiting.");
+    if (!printOnly) console.log("Nothing to submit. Exiting.");
     return;
   }
 
   // Deduplicate
   urls = [...new Set(urls)];
+
+  if (printOnly) {
+    urls.forEach((u) => console.log(u));
+    return;
+  }
 
   console.log(`Submitting ${urls.length} URL(s) to IndexNow:`);
   urls.forEach((u) => console.log(`  ${u}`));
