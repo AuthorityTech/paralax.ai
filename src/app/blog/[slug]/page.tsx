@@ -14,6 +14,7 @@ import {
   POST_SHARE_IMAGE_HEIGHT,
   POST_SHARE_IMAGE_WIDTH,
 } from "@/lib/postShare";
+import { addHeadingIds, extractSectionNav } from "@/lib/section-nav";
 import { generateBlogJsonLd, PX_BLOG_CONFIG } from "@editorialkit/schema";
 
 export const dynamicParams = true;
@@ -68,11 +69,12 @@ export default async function PostPage({ params }: Props) {
   if (!post) notFound();
 
   const normalizedContent = normalizeMarkdown(post.content);
+  const sectionNav = extractSectionNav(normalizedContent);
   const processed = await remark()
     .use(remarkGfm)
     .use(remarkHtml, { sanitize: false })
     .process(normalizedContent);
-  const html = normalizeProseHtml(processed.toString());
+  const html = addHeadingIds(normalizeProseHtml(processed.toString()), sectionNav);
 
   const image = getPostShareImageUrl(slug);
   const imageAlt = `${post.title} — Paralax intelligence image`;
@@ -91,64 +93,89 @@ export default async function PostPage({ params }: Props) {
   );
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-16 md:py-20">
+    <div
+      className={
+        sectionNav.length > 0
+          ? "mx-auto grid max-w-5xl gap-10 px-6 py-16 md:py-20 lg:grid-cols-[minmax(0,42rem)_12rem]"
+          : "mx-auto max-w-2xl px-6 py-16 md:py-20"
+      }
+    >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: blogLd }} />
 
-      <nav className="mb-12">
-        <Link
-          href="/blog"
-          className="font-mono text-[11px] uppercase tracking-[0.08em] text-link transition-colors duration-200 ease-nothing hover:text-nothing-primary"
-        >
-          &larr; Intel
-        </Link>
-      </nav>
+      <article className="min-w-0">
+        <nav className="mb-12">
+          <Link
+            href="/blog"
+            className="font-mono text-[11px] uppercase tracking-[0.08em] text-link transition-colors duration-200 ease-nothing hover:text-nothing-primary"
+          >
+            &larr; Intel
+          </Link>
+        </nav>
 
-      <header className="mb-10">
-        <h1 data-speakable="headline" className="mb-5 font-display text-[1.65rem] font-medium leading-tight tracking-[-0.02em] text-nothing-display md:text-[2rem]">
-          {post.title}
-        </h1>
-        {post.description && (
-          <p data-speakable="summary" className="mb-6 text-[0.95rem] leading-relaxed text-nothing-secondary">
-            {post.description}
-          </p>
-        )}
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-nothing-secondary">Paralax Editorial</span>
-          <span className="text-nothing-border">&middot;</span>
-          <time className="font-mono text-[11px] uppercase tracking-[0.06em] text-nothing-disabled">{formatDate(post.date)}</time>
-          {post.tags && post.tags.length > 0 && (
-            <>
-              <span className="text-nothing-border">&middot;</span>
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="border border-nothing-borderHi bg-nothing-surface px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-nothing-secondary">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </>
+        <header className="mb-10">
+          <h1 data-speakable="headline" className="mb-5 font-display text-[1.65rem] font-medium leading-tight tracking-[-0.02em] text-nothing-display md:text-[2rem]">
+            {post.title}
+          </h1>
+          {post.description && (
+            <p data-speakable="summary" className="mb-6 text-[0.95rem] leading-relaxed text-nothing-secondary">
+              {post.description}
+            </p>
           )}
-        </div>
-      </header>
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-nothing-secondary">Paralax Editorial</span>
+            <span className="text-nothing-border">&middot;</span>
+            <time className="font-mono text-[11px] uppercase tracking-[0.06em] text-nothing-disabled">{formatDate(post.date)}</time>
+            {post.tags && post.tags.length > 0 && (
+              <>
+                <span className="text-nothing-border">&middot;</span>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <span key={tag} className="border border-nothing-borderHi bg-nothing-surface px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-nothing-secondary">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </header>
 
-      <figure className="mb-12">
-        <NextImage
-          src={`/blog/${slug}/opengraph-image`}
-          width={POST_SHARE_IMAGE_WIDTH}
-          height={POST_SHARE_IMAGE_HEIGHT}
-          alt={imageAlt}
-          unoptimized
-          className="aspect-[1200/630] w-full rounded-[4px] border border-nothing-border object-cover"
+        <figure className="mb-12">
+          <NextImage
+            src={`/blog/${slug}/opengraph-image`}
+            width={POST_SHARE_IMAGE_WIDTH}
+            height={POST_SHARE_IMAGE_HEIGHT}
+            alt={imageAlt}
+            unoptimized
+            className="aspect-[1200/630] w-full rounded-[4px] border border-nothing-border object-cover"
+          />
+          <figcaption className="mt-3 font-mono text-[10px] uppercase tracking-[0.08em] text-nothing-disabled">
+            Visual summary for this Paralax analysis.
+          </figcaption>
+        </figure>
+
+        <div
+          className="prose prose-nothing max-w-none prose-p:mb-5 prose-p:leading-[1.75] prose-p:text-nothing-primary prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-nothing-display prose-a:text-link prose-a:no-underline prose-strong:text-nothing-primary prose-li:text-nothing-secondary prose-blockquote:border-nothing-border prose-blockquote:text-nothing-secondary prose-code:text-nothing-primary prose-pre:rounded prose-pre:border prose-pre:border-nothing-border prose-pre:bg-nothing-raised prose-hr:border-nothing-border prose-h2:mb-4 prose-h2:mt-10 hover:prose-a:text-nothing-primary"
+          dangerouslySetInnerHTML={{ __html: html }}
         />
-        <figcaption className="mt-3 font-mono text-[10px] uppercase tracking-[0.08em] text-nothing-disabled">
-          Visual summary for this Paralax analysis.
-        </figcaption>
-      </figure>
+      </article>
 
-      <div
-        className="prose prose-nothing max-w-none prose-p:mb-5 prose-p:leading-[1.75] prose-p:text-nothing-primary prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-nothing-display prose-a:text-link prose-a:no-underline prose-strong:text-nothing-primary prose-li:text-nothing-secondary prose-blockquote:border-nothing-border prose-blockquote:text-nothing-secondary prose-code:text-nothing-primary prose-pre:rounded prose-pre:border prose-pre:border-nothing-border prose-pre:bg-nothing-raised prose-hr:border-nothing-border prose-h2:mb-4 prose-h2:mt-10 hover:prose-a:text-nothing-primary"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      {sectionNav.length > 0 && (
+        <aside className="hidden lg:block" aria-label="Article sections">
+          <nav className="sticky top-20 border-t border-nothing-border pt-4">
+            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.08em] text-nothing-disabled">Sections</p>
+            <ol className="space-y-2">
+              {sectionNav.map((item) => (
+                <li key={item.id} className={item.level === 3 ? "pl-3" : undefined}>
+                  <a href={`#${item.id}`} className="block text-[12px] leading-snug text-nothing-secondary transition-colors duration-200 ease-nothing hover:text-link">
+                    {item.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </aside>
+      )}
     </div>
   );
 }

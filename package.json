@@ -9,6 +9,7 @@
     "build": "npm run machine:parity && next build && node scripts/crawl-guard.mjs",
     "start": "next start",
     "lint": "next lint",
+    "section-nav:check": "node scripts/validate-section-nav.mjs",
     "machine:parity": "node scripts/validate-machine-view-parity.mjs",
     "smoke": "bash scripts/smoke-check.sh",
     "gsc:check": "bash scripts/gsc-check.sh",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@editorialkit/schema": "file:packages/editorialkit-schema-1.2.0.tgz",
+    "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "next": "^15.5.18",
     "react": "^19.0.0",
