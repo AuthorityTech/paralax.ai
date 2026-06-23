@@ -97,7 +97,7 @@ export default async function PostPage({ params }: Props) {
       className={
         sectionNav.length > 0
           ? "mx-auto grid max-w-5xl gap-10 px-6 py-16 md:py-20 lg:grid-cols-[minmax(0,42rem)_12rem]"
-          : "mx-auto max-w-2xl px-6 py-16 md:py-20"
+          : "mx-auto max-w-content px-6 py-16 md:py-20"
       }
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: blogLd }} />
