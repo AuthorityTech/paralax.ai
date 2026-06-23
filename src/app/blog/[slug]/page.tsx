@@ -94,11 +94,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <div
-      className={
-        sectionNav.length > 0
-          ? "mx-auto grid max-w-5xl gap-10 px-6 py-16 md:py-20 lg:grid-cols-[minmax(0,42rem)_12rem]"
-          : "mx-auto max-w-content px-6 py-16 md:py-20"
-      }
+      className="relative mx-auto max-w-content px-6 py-16 md:py-20"
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: blogLd }} />
 
@@ -161,8 +157,8 @@ export default async function PostPage({ params }: Props) {
       </article>
 
       {sectionNav.length > 0 && (
-        <aside className="hidden lg:block" aria-label="Article sections">
-          <nav className="sticky top-20 border-t border-nothing-border pt-4">
+        <aside className="hidden xl:block xl:absolute xl:inset-y-20 xl:left-full xl:ml-8 xl:w-48" aria-label="Article sections">
+          <nav className="sticky top-24 border-l border-nothing-border pl-5">
             <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.08em] text-nothing-disabled">Sections</p>
             <ol className="space-y-2">
               {sectionNav.map((item) => (
