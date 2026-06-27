@@ -1,5 +1,5 @@
 ---
-title: "GEO Is Becoming an AI Search Attack Surface"
+title: "GEO Manipulation Can Push Harmful Claims Into AI-Generated Answers"
 date: "2026-06-25"
 slug: "geo-manipulation-ai-search-attack-surface-2026"
 description: "GEO manipulation is moving from SEO tactic to AI search security risk as answer engines absorb web evidence."
