@@ -1,5 +1,5 @@
 ---
-title: "AI Referral Attribution Is Now the Blind Spot in Search Visibility"
+title: "How to Track AI Search Traffic Attribution"
 date: "2026-07-06"
 slug: "ai-referral-attribution-search-visibility-2026"
 description: "AI referral tracking now exposes a larger attribution gap than GA4 setup alone can solve."
