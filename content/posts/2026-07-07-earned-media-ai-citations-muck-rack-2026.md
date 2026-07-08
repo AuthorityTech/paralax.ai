@@ -1,5 +1,5 @@
 ---
-title: "Earned Media Is Becoming the Citation Layer for AI Search"
+title: "Earned Media AI Citations: Muck Rack's 84% 2026 Report"
 date: "2026-07-07"
 slug: "earned-media-ai-citations-muck-rack-2026"
 description: "Muck Rack's 84% AI citation finding shows why earned media is becoming the trust layer for AI search."
