@@ -1,5 +1,5 @@
 ---
-title: "Perplexity WANDR Turns AI Search Into an Evidence-Depth Test"
+title: "Perplexity WANDR Benchmark: Research Agents Still Fail Evidence Depth"
 date: "2026-07-19"
 slug: "perplexity-wandr-research-agents-search-depth-2026"
 description: "Perplexity WANDR shows AI research agents still fail at evidence depth, not just page discovery."
